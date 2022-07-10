@@ -5602,7 +5602,9 @@ let api = function Binance( options = {} ) {
                         }
                         // Store symbol next use
                         json.symb = symbol;
-                        cb( null, json )
+                        setTimeout( () => {
+                            cb( null, json )
+                        }, 15000 )
                     } );
                 };
 
