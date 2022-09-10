@@ -406,6 +406,10 @@ let api = function Binance( options = {} ) {
         }
 
         if ( typeof flags.trailingDelta !== 'undefined' ) opt.trailingDelta = flags.trailingDelta;
+        if ( flags.cancelReplaceMode ) {
+            endpoint = 'v3/order/cancelReplace';
+            opt.cancelReplaceMode = flags.cancelReplaceMode;
+        }
 
         signedRequest( base + endpoint, opt, ( error, response ) => {
             if ( !response ) {
@@ -3081,11 +3085,11 @@ let api = function Binance( options = {} ) {
         },
 
         /**
-        * Cancels all orders of a given symbol
-        * @param {string} symbol - the symbol to cancel all orders for
-        * @param {function} callback - the callback function
-        * @return {promise or undefined} - omitting the callback returns a promise
-        */
+         * Cancels all orders of a given symbol
+         * @param {string} symbol - the symbol to cancel all orders for
+         * @param {function} callback - the callback function
+         * @return {promise or undefined} - omitting the callback returns a promise
+         */
         cancelAll: function ( symbol, callback = false ) {
             if ( !callback ) {
                 return new Promise( ( resolve, reject ) => {
@@ -3100,6 +3104,24 @@ let api = function Binance( options = {} ) {
                 } )
             } else {
                 signedRequest( base + 'v3/openOrders', { symbol }, callback, 'DELETE' );
+            }
+        },
+
+        cancelReplaceSell: function ( symbol, quantity, price, flags = {}, callback = false ) {
+            flags.cancelReplaceMode = 'STOP_ON_FAILURE'
+            if ( !callback ) {
+                return new Promise( ( resolve, reject ) => {
+                    callback = ( error, response ) => {
+                        if ( error ) {
+                            reject( error );
+                        } else {
+                            resolve( response );
+                        }
+                    }
+                    order( 'SELL', symbol, quantity, price, flags, callback );
+                } )
+            } else {
+                order( 'SELL', symbol, quantity, price, flags, callback );
             }
         },
 
