@@ -409,6 +409,7 @@ let api = function Binance( options = {} ) {
         if ( flags.cancelReplaceMode ) {
             endpoint = 'v3/order/cancelReplace';
             opt.cancelReplaceMode = flags.cancelReplaceMode;
+            opt.cancelOrderId = flags.cancelOrderId;
         }
 
         signedRequest( base + endpoint, opt, ( error, response ) => {
