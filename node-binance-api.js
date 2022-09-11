@@ -409,8 +409,9 @@ let api = function Binance( options = {} ) {
         if ( flags.cancelReplaceMode ) {
             endpoint = 'v3/order/cancelReplace';
             opt.cancelReplaceMode = flags.cancelReplaceMode;
-            //opt.cancelOrderId = flags.cancelOrderId;
+            opt.cancelOrderId = flags.cancelOrderId;
             opt.cancelOrigClientOrderId = flags.cancelOrigClientOrderId;
+            console.log( 'opt', opt )
         }
 
         signedRequest( base + endpoint, opt, ( error, response ) => {
@@ -770,7 +771,8 @@ let api = function Binance( options = {} ) {
         ws.on( 'close', handleSocketClose.bind( ws, reconnect ) );
         ws.on( 'message', data => {
             try {
-                callback( JSON.parse( data ).data );
+                const dataParse = JSON.parse( data )
+                callback( dataParse.data, dataParse.stream );
             } catch ( error ) {
                 Binance.options.log( 'CombinedStream: Parse error: ' + error.message );
             }
@@ -5566,9 +5568,12 @@ let api = function Binance( options = {} ) {
                 if ( Array.isArray( symbols ) ) {
                     if ( !isArrayUnique( symbols ) ) throw Error( 'depth: "symbols" cannot contain duplicate elements.' );
                     let streams = symbols.map( function ( symbol ) {
-                        return symbol.toLowerCase() + '@depth@100ms';
+                        return symbol.toLowerCase() + '@depth20@100ms';
                     } );
-                    subscription = subscribeCombined( streams, callback, reconnect );
+                    subscription = subscribeCombined( streams, function ( data, stream ) {
+                        //stream: 'icpusdt@depth20@100ms'
+                        callback( stream.split( '@' )[0].toUpperCase(), data )
+                    }, reconnect );
                 } else {
                     let symbol = symbols;
                     subscription = subscribe( symbol.toLowerCase() + '@depth@100ms', callback, reconnect );
@@ -5663,7 +5668,7 @@ let api = function Binance( options = {} ) {
                     if ( !isArrayUnique( symbols ) ) throw Error( 'depthCache: "symbols" cannot contain duplicate elements.' );
                     symbols.forEach( symbolDepthInit );
                     let streams = symbols.map( function ( symbol ) {
-                        return symbol.toLowerCase() + `@depth@1000ms`;
+                        return symbol.toLowerCase() + `@depth@100ms`;
                     } );
                     subscription = subscribeCombined( streams, handleDepthStreamData, reconnect, function () {
                         async.mapLimit( symbols, 40, getSymbolDepthSnapshot, ( err, results ) => {
