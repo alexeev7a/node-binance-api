@@ -5568,7 +5568,7 @@ let api = function Binance( options = {} ) {
                 if ( Array.isArray( symbols ) ) {
                     if ( !isArrayUnique( symbols ) ) throw Error( 'depth: "symbols" cannot contain duplicate elements.' );
                     let streams = symbols.map( function ( symbol ) {
-                        return symbol.toLowerCase() + '@depth20@100ms';
+                        return symbol.toLowerCase() + '@depth@1000ms';
                     } );
                     subscription = subscribeCombined( streams, function ( data, stream ) {
                         //stream: 'icpusdt@depth20@100ms'
