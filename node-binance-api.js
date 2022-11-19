@@ -405,6 +405,7 @@ let api = function Binance( options = {} ) {
             if ( opt.type === 'LIMIT' ) throw Error( 'stopPrice: Must set "type" to one of the following: STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, TAKE_PROFIT_LIMIT' );
         }
 
+        if ( typeof flags.strategyId !== 'undefined' ) opt.strategyId = flags.strategyId;
         if ( typeof flags.trailingDelta !== 'undefined' ) opt.trailingDelta = flags.trailingDelta;
         if ( flags.cancelReplaceMode ) {
             endpoint = 'v3/order/cancelReplace';
