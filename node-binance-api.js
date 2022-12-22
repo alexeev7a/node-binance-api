@@ -5634,7 +5634,7 @@ let api = function Binance( options = {} ) {
                         json.symb = symbol;
                         setTimeout( () => {
                             cb( null, json )
-                        }, 15000 )
+                        }, 5000 )
                     } );
                 };
 
