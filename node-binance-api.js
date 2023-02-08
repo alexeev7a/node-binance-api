@@ -67,7 +67,7 @@ let api = function Binance( options = {} ) {
         test: false,
         hedgeMode: false,
         localAddress: false,
-        family: false,
+        family: 4,
         log: function ( ...args ) {
             console.log( Array.prototype.slice.call( args ) );
         }
