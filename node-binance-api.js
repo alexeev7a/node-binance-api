@@ -5634,7 +5634,7 @@ let api = function Binance( options = {} ) {
                         json.symb = symbol;
                         setTimeout( () => {
                             cb( null, json )
-                        }, 5001 )
+                        }, 2000 )
                     } );
                 };
 
@@ -5672,7 +5672,7 @@ let api = function Binance( options = {} ) {
                         return symbol.toLowerCase() + `@depth@100ms`;
                     } );
                     subscription = subscribeCombined( streams, handleDepthStreamData, reconnect, function () {
-                        async.mapLimit( symbols, 40, getSymbolDepthSnapshot, ( err, results ) => {
+                        async.mapLimit( symbols, 20, getSymbolDepthSnapshot, ( err, results ) => {
                             if ( err ) throw err;
                             results.forEach( updateSymbolDepthCache );
                         } );
