@@ -5669,7 +5669,7 @@ let api = function Binance( options = {} ) {
                     if ( !isArrayUnique( symbols ) ) throw Error( 'depthCache: "symbols" cannot contain duplicate elements.' );
                     symbols.forEach( symbolDepthInit );
                     let streams = symbols.map( function ( symbol ) {
-                        return symbol.toLowerCase() + `@depth@100ms`;
+                        return symbol.toLowerCase() + `@depth`;
                     } );
                     subscription = subscribeCombined( streams, handleDepthStreamData, reconnect, function () {
                         async.mapLimit( symbols, 20, getSymbolDepthSnapshot, ( err, results ) => {
