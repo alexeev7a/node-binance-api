@@ -652,7 +652,9 @@ let api = function Binance( options = {} ) {
             if ( this.endpoint && parseInt( this.endpoint.length, 10 ) === 60 ) Binance.options.log( 'Account data WebSocket reconnecting...' );
             else Binance.options.log( 'WebSocket reconnecting: ' + this.endpoint + '...' );
             try {
-                reconnect();
+                setTimeout( () => {
+                    reconnect();
+                }, 45000 )
             } catch ( error ) {
                 Binance.options.log( 'WebSocket reconnect error: ' + error.message );
             }
