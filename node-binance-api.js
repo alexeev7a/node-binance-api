@@ -716,6 +716,7 @@ let api = function Binance( options = {} ) {
         if ( Binance.options.verbose ) Binance.options.log( 'Subscribed to ' + endpoint );
         ws.reconnect = Binance.options.reconnect;
         ws.endpoint = endpoint;
+        console.log( 'subscribe', endpoint )
         ws.isAlive = false;
         ws.on( 'open', handleSocketOpen.bind( ws, opened_callback ) );
         ws.on( 'pong', handleSocketHeartbeat );
