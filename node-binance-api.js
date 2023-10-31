@@ -3573,10 +3573,10 @@ let api = function Binance( options = {} ) {
                             resolve( response );
                         }
                     }
-                    signedRequest( wapi + 'v3/tradeFee.html', params, callback );
+                    signedRequest( sapi + 'v1/asset/tradeFee', params, callback );
                 } )
             } else {
-                signedRequest( wapi + 'v3/tradeFee.html', params, callback );
+                signedRequest( sapi + 'v1/asset/tradeFee', params, callback );
             }
         },
 
@@ -5572,7 +5572,7 @@ let api = function Binance( options = {} ) {
                 if ( Array.isArray( symbols ) ) {
                     if ( !isArrayUnique( symbols ) ) throw Error( 'depth: "symbols" cannot contain duplicate elements.' );
                     let streams = symbols.map( function ( symbol ) {
-                        return symbol.toLowerCase() + '@depth@1000ms';
+                        return symbol.toLowerCase() + '@depth5@100ms';
                     } );
                     subscription = subscribeCombined( streams, function ( data, stream ) {
                         //stream: 'icpusdt@depth20@100ms'
