@@ -5909,16 +5909,19 @@ let api = function Binance( options = {} ) {
              * @param {function} callback - callback function
              * @return {string} the websocket endpoint
              */
-            bookTickers: function bookTickerStream( symbol = false, callback = console.log ) {
-                if ( typeof symbol == 'function' ) {
-                    callback = symbol;
-                    symbol = false;
-                }
-                let reconnect = () => {
-                    if ( Binance.options.reconnect ) bookTickerStream( symbol, callback );
+            bookTickers: function bookTickers( symbols = [], callback = console.log ) {
+                if ( !isArrayUnique( symbols ) ) throw Error( 'depth: "symbols" cannot contain duplicate elements.' );
+
+                const reconnect = () => {
+                    if ( Binance.options.reconnect ) bookTickers( symbols, callback );
                 };
-                const endpoint = symbol ? `${ symbol.toLowerCase() }@bookTicker` : '!bookTicker'
-                let subscription = subscribe( endpoint, data => callback( fBookTickerConvertData( data ) ), reconnect );
+                const streams = symbols.map( function ( symbol ) {
+                    return symbol.toLowerCase() + '@bookTicker';
+                } );
+                const subscription = subscribeCombined( streams, function ( data, stream ) {
+                    callback( stream.split( '@' )[0].toUpperCase(), data )
+                }, reconnect );
+
                 return subscription.endpoint;
             },
 
